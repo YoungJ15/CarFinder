@@ -101,7 +101,7 @@ public class FetchCarListTask extends AsyncTask<String, Void, String[]> {
             Log.v(LOG_TAG, "Car JSON String: " + carJSONString);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
-            //If no weather data was returned, there is no need for parsing
+            //If no car data was returned, there is no need for parsing
             return null;
 
         } finally {
@@ -127,4 +127,4 @@ public class FetchCarListTask extends AsyncTask<String, Void, String[]> {
     }
 
 }
-}
+

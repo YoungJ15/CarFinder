@@ -107,7 +107,7 @@ public class CarListFragment extends Fragment {
     public class FetchCarListTask extends AsyncTask<String, Void, String[]> {
         private final String LOG_TAG = FetchCarListTask.class.getSimpleName();
 
-        private String[] getCarListFromJSON(String carListJSONString, int numero) throws JSONException {
+        private String[] getCarListFromJSON(String carListJSONString) throws JSONException {
             //JSON Objects Names to Extract
             final String EDP_STYLES = "styles";
             final String EDP_SUBMODEL = "submodel";
@@ -116,24 +116,29 @@ public class CarListFragment extends Fragment {
             JSONArray carArray = carListJSON.getJSONArray(EDP_STYLES);
             Log.v(LOG_TAG+"Car Array Length: ",String.valueOf(carArray.length()));
 
-            String [] resultString = new String[numero];
+            String [] resultString = new String[carArray.length()];
             for(int i=0;i<carArray.length();i++){
 
                 String modelName;
                 String idCar;
+                String idModel;
+                String year;
 
                 //Get the JSON representing the car
                 JSONObject Car = carArray.getJSONObject(i);
 
                 idCar = carListJSON.getString("id");
+                year = carListJSON.getString("year");
+                idModel = carArray.getJSONObject(i).getString("id");
     //            Log.v(LOG_TAG,"ID Value: "+idCar);
                 //modelName is in a child object called submodel
                 JSONObject carObject = Car.getJSONObject(EDP_SUBMODEL);
       //          Log.v(LOG_TAG, carObject.toString());
+
                 modelName = carObject.getString("modelName");
      //           Log.v(LOG_TAG, modelName);
 
-                resultString[i] = idCar+"- "+modelName;
+                resultString[i] = "Car ID: "+idModel+" - "+modelName + " - "+year;
                 Log.v(LOG_TAG, "Result String: "+resultString[i]);
 
             }
@@ -154,11 +159,11 @@ public class CarListFragment extends Fragment {
             String view = "full";
             String divider = "%2F";
             String apiID = "y6hazeyr3t7tdhnpngjzy4rk";
-            int num = 42;
+
 
             try {
                 //Contructing the URL for the query and the other constant query parameters
-                final String BASE_URL = "http://api.edmunds.com/api/vehicle/v2/honda/civic/2005";
+                final String BASE_URL = "http://api.edmunds.com/api/vehicle/v2/honda/civic/2010";
                 final String API_KEY = "api_key";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon().
@@ -209,7 +214,7 @@ public class CarListFragment extends Fragment {
                 }
             }
             try {
-                return getCarListFromJSON(carJSONString, num);
+                return getCarListFromJSON(carJSONString);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
