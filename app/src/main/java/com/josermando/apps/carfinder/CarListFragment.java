@@ -70,7 +70,7 @@ public class CarListFragment extends Fragment {
 
     private void updateCarList(){
         FetchCarListTask carTask = new FetchCarListTask();
-        carTask.execute();
+        carTask.execute("toyota","corolla","2001");
     }
 
     @Override
@@ -162,17 +162,15 @@ public class CarListFragment extends Fragment {
 
 
             try {
-                //Contructing the URL for the query and the other constant query parameters
-                final String BASE_URL = "http://api.edmunds.com/api/vehicle/v2/honda/civic/2010";
+                //Contructing the URL for the query and the other constant query parameterss
+                final String BASE_URL = "http://api.edmunds.com/api/vehicle/v2/"+params[0]+"/"+params[1]+"/"+params[2];
                 final String API_KEY = "api_key";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon().
-                        // appendQueryParameter(divider, params[0]).
-                                //  appendQueryParameter(divider,params[1]).
-                                //  appendQueryParameter(divider,params[2]).
-                                appendQueryParameter(API_KEY, apiID).build();
-                URL url = new URL(builtUri.toString());
-                Log.v(LOG_TAG,"Built Uri: "+builtUri.toString());
+                         appendQueryParameter(API_KEY, apiID).build();
+
+                URL url = new URL(builtUri.toString().replaceAll("%2F","/"));
+                Log.v(LOG_TAG,"Built Uri and URL: "+url);
                 //Creating the Request and opening the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
