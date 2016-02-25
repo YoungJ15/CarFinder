@@ -25,8 +25,13 @@ public class MainActivity extends ActionBarActivity {
         if(savedInstanceState == null){
             getFragmentManager().beginTransaction().add(R.id.container, new CarListFragment()).commit();
         }
+        //Setting the toolbar that was created
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.app_title);
+        toolbar.setSubtitle(R.string.app_subtitle);
+        toolbar.setLogo(R.drawable.car_info_logo);
+        toolbar.setNavigationIcon(R.drawable.navigation_back);
 
         //Ads info
         mAdView = (AdView) findViewById(R.id.ad_view2);

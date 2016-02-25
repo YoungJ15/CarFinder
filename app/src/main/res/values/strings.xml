@@ -5,5 +5,7 @@
     <string name="model_textview">Model</string>
     <string name="banner_ad_unit_id">ca-app-pub-6482688051062241/2942731613</string>
     <string name="banner_ad_unit_id2">ca-app-pub-6482688051062241/3721460817</string>
+    <string name="app_title">myCar</string>
+    <string name="app_subtitle">Info</string>
 
 </resources>
