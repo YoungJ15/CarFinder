@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -27,7 +26,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -70,7 +68,7 @@ public class CarListFragment extends Fragment {
 
     private void updateCarList(){
         FetchCarListTask carTask = new FetchCarListTask();
-        carTask.execute("toyota","corolla","2001");
+        carTask.execute("toyota","corolla","2011");
     }
 
     @Override
@@ -130,13 +128,8 @@ public class CarListFragment extends Fragment {
                 idCar = carListJSON.getString("id");
                 year = carListJSON.getString("year");
                 idModel = carArray.getJSONObject(i).getString("id");
-    //            Log.v(LOG_TAG,"ID Value: "+idCar);
-                //modelName is in a child object called submodel
                 JSONObject carObject = Car.getJSONObject(EDP_SUBMODEL);
-      //          Log.v(LOG_TAG, carObject.toString());
-
                 modelName = carObject.getString("modelName");
-     //           Log.v(LOG_TAG, modelName);
 
                 resultString[i] = "Car ID: "+idModel+" - "+modelName + " - "+year;
                 Log.v(LOG_TAG, "Result String: "+resultString[i]);
@@ -154,10 +147,6 @@ public class CarListFragment extends Fragment {
             String carJSONString = null;
 
             //Query Values
-            String format = "json";
-            String state = "used";
-            String view = "full";
-            String divider = "%2F";
             String apiID = "y6hazeyr3t7tdhnpngjzy4rk";
 
 

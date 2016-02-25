@@ -10,8 +10,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends ActionBarActivity {
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
+public class MainActivity extends ActionBarActivity {
+    //Ads
+    private AdView  mAdView;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,15 +28,43 @@ public class MainActivity extends ActionBarActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        //Ads info
+        mAdView = (AdView) findViewById(R.id.ad_view2);
+        //Create and Ad request
+        AdRequest adRequest = new AdRequest.Builder().setGender(AdRequest.GENDER_MALE).build();
+                //addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+        //Start loading the ad in the background
+        mAdView.loadAd(adRequest);
+
     }
+    //Only for Ads testing purposes
+    /** Called when leaving the activity */
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    /** Called when returning to the activity */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    /** Called before the activity is destroyed */
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
+    }
+    //Only for Ads testing purposes
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
