@@ -1,6 +1,7 @@
 package com.josermando.apps.carfinder;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,10 +35,6 @@ import java.util.List;
 public class CarListFragment extends Fragment {
     private ArrayAdapter<String> mCarAdapter;
 
-    public ArrayAdapter<String> getmCarAdapter() {
-        return mCarAdapter;
-    }
-
     public CarListFragment() {
 
     }
@@ -59,23 +56,24 @@ public class CarListFragment extends Fragment {
         //To handle action bar item clicks.
         int id = item.getItemId();
         if(id == R.id.action_refresh){
-            updateCarList();
+          //  updateCarList();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateCarList(){
+    public void updateCarList(String make, String model, String year){
         FetchCarListTask carTask = new FetchCarListTask();
-        carTask.execute("toyota","corolla","2011");
+        carTask.execute(make, model, year);
     }
 
-    @Override
-    public void onStart() {
+    /**   @Override
+   public void onStart() {
         super.onStart();
         updateCarList();
     }
+  **/
 
     @Nullable
     @Override
