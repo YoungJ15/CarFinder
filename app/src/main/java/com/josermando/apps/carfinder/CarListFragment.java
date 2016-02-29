@@ -14,7 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +37,11 @@ import java.util.List;
  */
 public class CarListFragment extends Fragment {
     private ArrayAdapter<String> mCarAdapter;
+
+    Button button;
+    public EditText makeText;
+    public EditText modelText;
+    public EditText yearText;
 
     public CarListFragment() {
 
@@ -56,7 +64,8 @@ public class CarListFragment extends Fragment {
         //To handle action bar item clicks.
         int id = item.getItemId();
         if(id == R.id.action_refresh){
-          //  updateCarList();
+            updateCarList("honda","civic","2005");
+            Toast.makeText(getActivity(),"Settings button clicked", Toast.LENGTH_LONG);
             return true;
         }
 
@@ -80,6 +89,21 @@ public class CarListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        button = (Button) rootView.findViewById(R.id.searchBtn);
+        makeText = (EditText) rootView.findViewById(R.id.makeEt);
+        modelText = (EditText) rootView.findViewById(R.id.modelEt);
+        yearText = (EditText) rootView.findViewById(R.id.yearEt);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String carMake = makeText.getText().toString();;
+                String carModel = modelText.getText().toString();;
+                String carYear = yearText.getText().toString();
+
+                updateCarList(carMake, carModel, carYear);
+                //getFragmentManager().beginTransaction().replace(R.id.container, new CarListFragment()).commit();
+            }
+        });
 
         List<String> carList = new ArrayList<>();
         mCarAdapter = new ArrayAdapter<>(getActivity(),
@@ -151,6 +175,7 @@ public class CarListFragment extends Fragment {
             try {
                 //Contructing the URL for the query and the other constant query parameterss
                 final String BASE_URL = "http://api.edmunds.com/api/vehicle/v2/"+params[0]+"/"+params[1]+"/"+params[2];
+                //final String BASE_URL = "http://api.edmunds.com/api/vehicle/v2/honda/crv/2000";
                 final String API_KEY = "api_key";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon().
