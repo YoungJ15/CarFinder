@@ -19,6 +19,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +40,7 @@ import java.util.List;
  */
 public class CarListFragment extends Fragment {
     private ArrayAdapter<String> mCarAdapter;
+    private AdView  mAdView;
 
     Button button;
     public EditText makeText;
@@ -51,6 +55,7 @@ public class CarListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mCarAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_car, R.id.list_item_car_textview, new ArrayList<String>());
     }
 
     @Override
@@ -104,12 +109,18 @@ public class CarListFragment extends Fragment {
                 //getFragmentManager().beginTransaction().replace(R.id.container, new CarListFragment()).commit();
             }
         });
+        //Ads info
+             mAdView = (AdView) rootView.findViewById(R.id.ad_view2);
+        //Create and Ad request
+             AdRequest adRequest = new AdRequest.Builder().setGender(AdRequest.GENDER_MALE).build();
+        //Start loading the ad in the background
+           mAdView.loadAd(adRequest);
 
         List<String> carList = new ArrayList<>();
         mCarAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_car,
                 R.id.list_item_car_textview,
-                carList);
+                new ArrayList<String>());
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_car);
         listView.setAdapter(mCarAdapter);
@@ -162,7 +173,7 @@ public class CarListFragment extends Fragment {
         }
         @Override
         protected String[] doInBackground(String... params) {
-            Log.v(LOG_TAG, "Pararms count: "+params.length);
+            Log.v(LOG_TAG, "Pararms count: " + params.length);
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             //This variable will contain the raw JSON Response

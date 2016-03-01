@@ -33,15 +33,6 @@ public class MainActivity extends ActionBarActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        //Ads info
-   //     mAdView = (AdView) findViewById(R.id.ad_view2);
-        //Create and Ad request
-   //     AdRequest adRequest = new AdRequest.Builder().setGender(AdRequest.GENDER_MALE).build();
-                //addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-        //Start loading the ad in the background
-     //   mAdView.loadAd(adRequest);
-
      }
     //Only for Ads testing purposes
     /** Called when leaving the activity */
