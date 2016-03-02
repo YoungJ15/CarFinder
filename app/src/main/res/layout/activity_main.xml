@@ -6,11 +6,42 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:id="@+id/container"
     tools:context="com.josermando.apps.carfinder.MainActivity">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/makeEt"
+            android:hint="Make"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/modelEt"
+            android:hint="Model" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/yearEt"
+            android:hint="Year" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:id="@+id/searchBtn" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

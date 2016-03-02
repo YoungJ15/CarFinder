@@ -1,73 +1,59 @@
 package com.josermando.apps.carfinder;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     //Ads
     private AdView  mAdView;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private Toolbar toolbar;
+    private Button button;
+    public EditText makeText;
+    public EditText modelText;
+    public EditText yearText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(savedInstanceState == null){
-            getFragmentManager().beginTransaction().add(R.id.container, new CarListFragment()).commit();
-        }
+        setUpToolbar();
 
-        //Setting the toolbar that was created
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        button = (Button) findViewById(R.id.searchBtn);
+        makeText = (EditText) findViewById(R.id.makeEt);
+        modelText = (EditText) findViewById(R.id.modelEt);
+        yearText = (EditText) findViewById(R.id.yearEt);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String carMake = makeText.getText().toString();
+                ;
+                String carModel = modelText.getText().toString();
+                ;
+                String carYear = yearText.getText().toString();
 
-     }
-    //Only for Ads testing purposes
-    /** Called when leaving the activity */
-   /** @Override
-    public void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
-        super.onPause();
+                Intent intent = new Intent(getBaseContext(), CarActivity.class);
+                intent.putExtra("MAKE",carMake);
+                intent.putExtra("MODEL",carModel);
+                intent.putExtra("YEAR",carYear);
+                startActivity(intent);
+            }
+        });
     }
 
-    /** Called when returning to the activity */
-    /**@Override
-    public void onResume() {
-        super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
-    }
-
-    /** Called before the activity is destroyed */
-    /**@Override
-    public void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
-    }
-    //Only for Ads testing purposes
-**/
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    private void setUpToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Car Info");
+        toolbar.inflateMenu(R.menu.menu_main);
     }
 
     @Override

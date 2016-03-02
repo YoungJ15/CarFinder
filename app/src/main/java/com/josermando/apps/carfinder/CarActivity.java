@@ -1,21 +1,15 @@
 package com.josermando.apps.carfinder;
 
-import android.app.Fragment;
-import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,105 +29,91 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Josermando Peralta on 2/19/2016.
- */
-public class CarListFragment extends Fragment {
+public class CarActivity extends AppCompatActivity {
+    private Toolbar toolbar;
+    private AdView mAdView;
+    private String model;
+    private String make;
+    private String year;
     private ArrayAdapter<String> mCarAdapter;
-    private AdView  mAdView;
-
-    Button button;
-    public EditText makeText;
-    public EditText modelText;
-    public EditText yearText;
-
-    public CarListFragment() {
-
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        mCarAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_car, R.id.list_item_car_textview, new ArrayList<String>());
+        setContentView(R.layout.activity_car);
+        setUpToolbar();
+        populateListView();
+        setUpAdView();
+
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //Fragment will handle menu events --- Basically receive callback for the methods onCreateOptionsMenu & onOptionsItemSelected
-        inflater.inflate(R.menu.carfragment, menu);
+    private void updateCarList(String make, String model, String year) {
+        new FetchCarListTask().execute(make, model, year);
     }
+    private void populateListView(){
+        Intent intent = getIntent();
+        make = intent.getStringExtra("MAKE");
+        model = intent.getStringExtra("MODEL");
+        year = intent.getStringExtra("YEAR");
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //To handle action bar item clicks.
-        int id = item.getItemId();
-        if(id == R.id.action_refresh){
-            updateCarList("honda","civic","2005");
-            Toast.makeText(getActivity(),"Settings button clicked", Toast.LENGTH_LONG);
-            return true;
-        }
+        updateCarList(make, model, year);
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void updateCarList(String make, String model, String year){
-        FetchCarListTask carTask = new FetchCarListTask();
-        carTask.execute(make, model, year);
-    }
-
-    /**   @Override
-   public void onStart() {
-        super.onStart();
-        updateCarList();
-    }
-  **/
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        button = (Button) rootView.findViewById(R.id.searchBtn);
-        makeText = (EditText) rootView.findViewById(R.id.makeEt);
-        modelText = (EditText) rootView.findViewById(R.id.modelEt);
-        yearText = (EditText) rootView.findViewById(R.id.yearEt);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String carMake = makeText.getText().toString();;
-                String carModel = modelText.getText().toString();;
-                String carYear = yearText.getText().toString();
-
-                updateCarList(carMake, carModel, carYear);
-                //getFragmentManager().beginTransaction().replace(R.id.container, new CarListFragment()).commit();
-            }
-        });
-        //Ads info
-             mAdView = (AdView) rootView.findViewById(R.id.ad_view2);
-        //Create and Ad request
-             AdRequest adRequest = new AdRequest.Builder().setGender(AdRequest.GENDER_MALE).build();
-        //Start loading the ad in the background
-           mAdView.loadAd(adRequest);
-
+        mCarAdapter = new ArrayAdapter<String>(this, R.layout.list_item_car, R.id.list_item_car_textview, new ArrayList<String>());
         List<String> carList = new ArrayList<>();
-        mCarAdapter = new ArrayAdapter<>(getActivity(),
+        mCarAdapter = new ArrayAdapter<>(this,
                 R.layout.list_item_car,
                 R.id.list_item_car_textview,
                 new ArrayList<String>());
 
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_car);
+        ListView listView = (ListView) findViewById(R.id.listview_car);
         listView.setAdapter(mCarAdapter);
-        /*
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                String car = mCarAdapter.getItem(position);
+               // Toast.makeText(getApplicationContext(), "Details Clicked", Toast.LENGTH_SHORT).show();
+                Intent detailIntent = new Intent(getApplicationContext(), CarDetails.class);
+                detailIntent.putExtra(Intent.EXTRA_TEXT,car);
+                startActivity(detailIntent);
             }
-        });*/
-        return rootView;
+        });
     }
+
+    private void setUpToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Car Info");
+        toolbar.inflateMenu(R.menu.menu_main);
+    }
+
+    private void setUpAdView(){
+        mAdView = (AdView) findViewById(R.id.ad_view2);
+        AdRequest adRequest = new AdRequest.Builder().setGender(AdRequest.GENDER_MALE).build();
+        mAdView.loadAd(adRequest);
+    }
+
+        @Override
+        public void onPause() {
+            if (mAdView != null) {
+            mAdView.pause();
+            }
+            super.onPause();
+        }
+        /** Called when returning to the activity */
+        @Override
+        public void onResume() {
+            super.onResume();
+            if (mAdView != null) {
+            mAdView.resume();
+            }
+            }
+            /** Called before the activity is destroyed */
+        @Override
+        public void onDestroy() {
+            if (mAdView != null) {
+            mAdView.destroy();
+            }
+            super.onDestroy();
+            }
 
     public class FetchCarListTask extends AsyncTask<String, Void, String[]> {
         private final String LOG_TAG = FetchCarListTask.class.getSimpleName();
@@ -145,7 +125,7 @@ public class CarListFragment extends Fragment {
 
             JSONObject carListJSON = new JSONObject(carListJSONString);
             JSONArray carArray = carListJSON.getJSONArray(EDP_STYLES);
-            Log.v(LOG_TAG+"Car Array Length: ",String.valueOf(carArray.length()));
+            Log.v(LOG_TAG + "Car Array Length: ", String.valueOf(carArray.length()));
 
             String [] resultString = new String[carArray.length()];
             for(int i=0;i<carArray.length();i++){
@@ -190,7 +170,7 @@ public class CarListFragment extends Fragment {
                 final String API_KEY = "api_key";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon().
-                         appendQueryParameter(API_KEY, apiID).build();
+                        appendQueryParameter(API_KEY, apiID).build();
 
                 URL url = new URL(builtUri.toString().replaceAll("%2F","/"));
                 Log.v(LOG_TAG,"Built Uri and URL: "+url);
@@ -253,4 +233,7 @@ public class CarListFragment extends Fragment {
             }
         }
     }
+
+
+
 }

@@ -1,9 +1,6 @@
-<resources>>
-
-    <style name="MaterialTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MaterialTheme" parent="ParentMaterialTheme">
+        <!-- For only lollipop and above features -->
     </style>
 </resources>
