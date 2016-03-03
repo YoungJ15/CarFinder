@@ -2,4 +2,5 @@
 <resources>
     <string name="app_title">myCar</string>
     <string name="app_subtitle">Info</string>
+    <string name="apiID">y6hazeyr3t7tdhnpngjzy4rk</string>
 </resources>

@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,18 +37,29 @@ public class CarDetails extends AppCompatActivity {
 
         }
 
-        String carID = mCarStr.trim().replaceAll(" ","").substring(6,15).replaceAll("%3A","");
-        new FetchCarImagesTask().execute(carID);
+        String carID = mCarStr.trim().replaceAll(" ","");
+        String temp= carID.substring(6,carID.indexOf("-")).replaceAll("%3A","");
+        new FetchCarImagesTask().execute(temp);
     }
     public class FetchCarImagesTask extends AsyncTask<String, Void, Bitmap> {
         private final String LOG_TAG = FetchCarImagesTask.class.getSimpleName();
 
-        private Bitmap getImageListFromJSON(String imageJSONString) {
+        private Bitmap getImageListFromJSON(String imageJSONString) throws JSONException{
             //JSON Objects Names to Extract
             final String AUTHOR = "authorNames";
+            final String CHILDREN = "children";
             final String CAPTION_TRANSCRIPT = "captionTranscript";
             final String SUBTYPE = "subType";
             final String PHOTO_SRC = "photoSrcs";
+
+            Log.v(LOG_TAG+" imageJsonString: ",imageJSONString);
+            String imageJSON = imageJSONString.substring(1, imageJSONString.length()-1);
+            JSONObject carImageJSON = new JSONObject(imageJSON.trim());
+
+            Log.v(LOG_TAG+ " imageJSON: ",imageJSON);
+            Log.v(LOG_TAG+ " CarImageJSON: ",carImageJSON.toString().replaceAll("\\\\",""));
+            JSONArray imageArray = carImageJSON.getJSONArray(PHOTO_SRC);
+            Log.v(LOG_TAG +"Image Array Length: ",imageArray.length()+" Image Array: "+imageArray.toString().replaceAll("\\\\",""));
             return null;
         }
         @Override
@@ -58,7 +71,7 @@ public class CarDetails extends AppCompatActivity {
             //Variable that will contain the RAW JSON response
             String imageJSONString = null;
             //API Key
-            String apiID = "y6hazeyr3t7tdhnpngjzy4rk";
+            //String apiID = getString(R.string.apiID);
 
             try{
                 //Contructing the URL for the query and the other constant query parameterss
@@ -69,7 +82,7 @@ public class CarDetails extends AppCompatActivity {
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon().
                         appendQueryParameter(STYLEID,params[0] ).
-                        appendQueryParameter(API_KEY, apiID).build();
+                        appendQueryParameter(API_KEY, getString(R.string.apiID)).build();
 
                 URL url = new URL(builtUri.toString().replaceAll("%2F","/"));
                 Log.v(LOG_TAG,"Built Uri and URL: "+url);
@@ -92,7 +105,7 @@ public class CarDetails extends AppCompatActivity {
                 if (buffer.length() == 0) {
                     //Stream was empty, no need for parsing
                     return null;
-                }
+                };
                 imageJSONString = buffer.toString();
                 Log.v(LOG_TAG, "Image JSON String: " + imageJSONString);
             } catch (IOException e) {

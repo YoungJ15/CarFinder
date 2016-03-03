@@ -43,7 +43,7 @@ public class CarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_car);
         setUpToolbar();
         populateListView();
-        setUpAdView();
+      //  setUpAdView();
 
     }
 
@@ -71,9 +71,9 @@ public class CarActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String car = mCarAdapter.getItem(position);
-               // Toast.makeText(getApplicationContext(), "Details Clicked", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "Details Clicked", Toast.LENGTH_SHORT).show();
                 Intent detailIntent = new Intent(getApplicationContext(), CarDetails.class);
-                detailIntent.putExtra(Intent.EXTRA_TEXT,car);
+                detailIntent.putExtra(Intent.EXTRA_TEXT, car);
                 startActivity(detailIntent);
             }
         });
@@ -91,15 +91,15 @@ public class CarActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
-        @Override
-        public void onPause() {
+    /**     @Override
+     public void onPause() {
             if (mAdView != null) {
             mAdView.pause();
             }
             super.onPause();
         }
         /** Called when returning to the activity */
-        @Override
+        /**   @Override
         public void onResume() {
             super.onResume();
             if (mAdView != null) {
@@ -107,13 +107,14 @@ public class CarActivity extends AppCompatActivity {
             }
             }
             /** Called before the activity is destroyed */
-        @Override
-        public void onDestroy() {
+        /**   @Override
+       public void onDestroy() {
             if (mAdView != null) {
             mAdView.destroy();
             }
             super.onDestroy();
             }
+    **/
 
     public class FetchCarListTask extends AsyncTask<String, Void, String[]> {
         private final String LOG_TAG = FetchCarListTask.class.getSimpleName();
@@ -124,6 +125,7 @@ public class CarActivity extends AppCompatActivity {
             final String EDP_SUBMODEL = "submodel";
 
             JSONObject carListJSON = new JSONObject(carListJSONString);
+            Log.v(LOG_TAG +"CarListJSON: ",carListJSON.toString());
             JSONArray carArray = carListJSON.getJSONArray(EDP_STYLES);
             Log.v(LOG_TAG + "Car Array Length: ", String.valueOf(carArray.length()));
 
@@ -160,7 +162,7 @@ public class CarActivity extends AppCompatActivity {
             String carJSONString = null;
 
             //Query Values
-            String apiID = "y6hazeyr3t7tdhnpngjzy4rk";
+        //    String apiID = "y6hazeyr3t7tdhnpngjzy4rk";
 
 
             try {
@@ -170,7 +172,7 @@ public class CarActivity extends AppCompatActivity {
                 final String API_KEY = "api_key";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon().
-                        appendQueryParameter(API_KEY, apiID).build();
+                        appendQueryParameter(API_KEY, getString(R.string.apiID)).build();
 
                 URL url = new URL(builtUri.toString().replaceAll("%2F","/"));
                 Log.v(LOG_TAG,"Built Uri and URL: "+url);
